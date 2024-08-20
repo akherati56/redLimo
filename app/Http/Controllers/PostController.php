@@ -17,9 +17,11 @@ class PostController extends Controller
 
     public function show(Post $request)
     {
-
-        $posts = Post::paginate(10);
-
+        $posts = Post::orderBy('created_at', 'desc')->with([
+            'comments' => function ($query) {
+                $query->take(2);
+            }
+        ])->paginate(10);
 
         return $posts;
     }

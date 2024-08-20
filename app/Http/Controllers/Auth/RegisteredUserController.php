@@ -52,7 +52,7 @@ class RegisteredUserController extends Controller
         // $token = $user->createToken('token')->accessToken;
         $token = 'testtoken';
 
-        Redis::set($request->phoneNumber, $token);
+        Redis::setex($request->phoneNumber, 600, $token);
 
         $storedToken = Redis::get($request->phoneNumber);
 

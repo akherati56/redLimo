@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('title');
             $table->text('text');
             $table->timestamps();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

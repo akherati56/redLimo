@@ -19,7 +19,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::post('/post', [PostController::class, 'store'])->name('post.post');
+    Route::post('/post/upload', [PostController::class, 'store'])->name('post.upload');
+    Route::get('/post', [PostController::class, 'show'])->name('post.show');
+    Route::put('/post/{id}', [PostController::class, 'edit'])->name('post.edit');
+    Route::delete('/post/{id}', [PostController::class, 'delete'])->name('post.delete');
 });
 
 require __DIR__ . '/auth.php';

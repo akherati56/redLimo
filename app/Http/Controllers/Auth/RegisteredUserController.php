@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Redis;
 
 class RegisteredUserController extends Controller
 {
@@ -48,13 +49,12 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        $user = User::where('email', $request->email)->first();
-        $token = $user->createToken('Personal Access Token')->accessToken;
+        // $token = $user->createToken('token')->accessToken;
+        $token = 'testtoken';
 
-        Cache::put('token_key', $token, now()->addMinutes(10));
+        Redis::set($request->phoneNumber, $token);
 
-
-        $storedToken = Cache::get('token_key');
+        $storedToken = Redis::get($request->phoneNumber);
 
         if ($storedToken != $token)
             return redirect(route('login'));

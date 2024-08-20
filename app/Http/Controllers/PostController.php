@@ -14,4 +14,23 @@ class PostController extends Controller
 
         return 'success! ';
     }
+
+    public function show(Post $request)
+    {
+
+        $posts = Post::paginate(10);
+
+
+        return $posts;
+    }
+
+    public function edit(Post $request)
+    {
+
+    }
+
+    public function delete(Post $request)
+    {
+
+    }
 }

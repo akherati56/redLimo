@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
 use Illuminate\Http\Request;
@@ -29,8 +30,15 @@ class PostController extends Controller
     public function show(Post $request)
     {
         $posts = $this->postService->getAllPosts();
-        return response()->json($posts);
 
+        return PostResource::collection($posts)->additional([
+            'meta' => [
+                'current_page' => $posts->currentPage(),
+                'per_page' => $posts->perPage(),
+                'total' => $posts->total(),
+                'total_pages' => $posts->lastPage(),
+            ]
+        ]);
     }
 
     public function edit($id)

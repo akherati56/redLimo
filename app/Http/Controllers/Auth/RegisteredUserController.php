@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -46,6 +47,17 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+
+        $user = User::where('email', $request->email)->first();
+        $token = $user->createToken('Personal Access Token')->accessToken;
+
+        Cache::put('token_key', $token, now()->addMinutes(10));
+
+
+        $storedToken = Cache::get('token_key');
+
+        if ($storedToken != $token)
+            return redirect(route('login'));
 
         Auth::login($user);
 

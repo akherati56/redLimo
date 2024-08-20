@@ -21,7 +21,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/post/upload', [PostController::class, 'store'])->name('post.upload');
     Route::get('/post', [PostController::class, 'show'])->name('post.show');
-    Route::put('/post/{id}', [PostController::class, 'edit'])->name('post.edit');
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/post/{id}', [PostController::class, 'delete'])->name('post.delete');
 });
 

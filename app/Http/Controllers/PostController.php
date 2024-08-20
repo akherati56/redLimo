@@ -24,9 +24,9 @@ class PostController extends Controller
         return $posts;
     }
 
-    public function edit(Post $request)
+    public function edit(Request $request, Post $post)
     {
-
+        $post->update($request);
     }
 
     public function delete(Post $request)

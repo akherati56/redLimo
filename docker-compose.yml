@@ -15,3 +15,13 @@ services:
       - "3309:3306"
     volumes:
       - ./database:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8090:80"
+    restart: always
+    environment:
+      PMA_HOST: database-service
+    depends_on:
+      - database-service

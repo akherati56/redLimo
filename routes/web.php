@@ -6,7 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
-Auth::login(User::find(1));
+// Auth::login(User::find(1));
 
 Route::get('/', function () {
     return view('welcome');

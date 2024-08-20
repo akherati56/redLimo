@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Redis;
 
@@ -29,35 +29,25 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegisterRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'phoneNumber' => ['required', 'string', 'max:255'],
-            'bio' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $validated = $request->validated();
 
         $user = User::create([
-            'name' => $request->name,
-            'phoneNumber' => $request->phoneNumber,
-            'bio' => $request->bio,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $validated['name'],
+            'phoneNumber' => $validated['phoneNumber'],
+            'bio' => $validated['bio'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
         ]);
 
-        event(new Registered($user));
+        // event(new Registered($user));
 
-        // $token = $user->createToken('token')->accessToken;
-        $token = 'testtoken';
+        $otp = rand(100000, 999999);
 
-        Redis::setex($request->phoneNumber, 600, $token);
+        Redis::setex('otp:' . $validated['phoneNumber'], 600, $otp);
 
-        $storedToken = Redis::get($request->phoneNumber);
-
-        if ($storedToken != $token)
-            return redirect(route('login'));
+        $storedToken = Redis::get('otp:' . $validated['phoneNumber']);
 
         Auth::login($user);
 

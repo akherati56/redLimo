@@ -3,7 +3,10 @@
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+
+Auth::login(User::find(1));
 
 Route::get('/', function () {
     return view('welcome');

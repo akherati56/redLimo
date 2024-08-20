@@ -2,39 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use App\Services\PostService;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function post(Request $request)
+
+    protected $postService;
+
+
+    public function __construct(PostService $postService)
     {
+        $this->postService = $postService;
+    }
 
-        // Validate the incoming request data
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'text' => 'required|string',
-        ]);
 
-        // Create a new post
-        $post = new Post;
-        $post->title = $validatedData['title'];
-        $post->body = $validatedData['text'];
-        $post->user_id = auth()->id(); // Assuming the user is authenticated
-
-        $post->save();
+    public function post(StorePostRequest $request)
+    {
+        $post = $this->postService->createPost($request);
 
         return response()->json($post, 201);
     }
 
     public function show(Post $request)
     {
-        $posts = Post::orderBy('created_at', 'desc')->with([
-            'comments' => function ($query) {
-                $query->take(2);
-            }
-        ])->paginate(10);
-
+        $posts = $this->postService->getAllPosts();
         return response()->json($posts);
 
     }

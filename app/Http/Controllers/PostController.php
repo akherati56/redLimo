@@ -24,7 +24,7 @@ class PostController extends Controller
 
         $post->save();
 
-        return ['success! '];
+        return response()->json($post, 201);
     }
 
     public function show(Post $request)
@@ -35,7 +35,8 @@ class PostController extends Controller
             }
         ])->paginate(10);
 
-        return $posts;
+        return response()->json($posts);
+
     }
 
     public function edit($id)

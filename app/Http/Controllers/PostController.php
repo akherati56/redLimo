@@ -7,12 +7,24 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function post(Post $request)
+    public function post(Request $request)
     {
 
-        $request->save();
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'text' => 'required|string',
+        ]);
 
-        return 'success! ';
+        // Create a new post
+        $post = new Post;
+        $post->title = $validatedData['title'];
+        $post->body = $validatedData['text'];
+        $post->user_id = auth()->id(); // Assuming the user is authenticated
+
+        $post->save();
+
+        return ['success! '];
     }
 
     public function show(Post $request)
@@ -26,9 +38,12 @@ class PostController extends Controller
         return $posts;
     }
 
-    public function edit(Request $request, Post $post)
+    public function edit($id)
     {
-        $post->update($request);
+        $post = Post::findOrFail($id);
+
+        // Return the edit view with the post data
+        return view('posts.edit', compact('post'));
     }
 
     public function delete(Post $request)

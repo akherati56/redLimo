@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\ProfileController;
@@ -25,4 +26,8 @@ Route::middleware('auth:api')->group(function () {
 
 Route::middleware('auth:api')->group(function () {
     Route::resource('/post', PostController::class);
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::resource('/comment', CommentController::class);
 });

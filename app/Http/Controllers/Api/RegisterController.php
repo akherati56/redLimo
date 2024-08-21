@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
@@ -22,11 +23,7 @@ class RegisterController extends Controller
             'password' => Hash::make($request['password']),
         ]);
 
-        $otp = rand(100000, 999999);
-
-        Redis::setex('otp:' . $request['phoneNumber'], 600, $otp);
-
-        return $otp;
+        event(new UserRegistered($user));
 
     }
 

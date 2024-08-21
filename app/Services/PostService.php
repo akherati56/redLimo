@@ -13,7 +13,7 @@ class PostService
             'comments' => function ($query) {
                 $query->take(2);
             }
-        ])->paginate(1);
+        ])->paginate(5);
 
         return $posts;
     }
@@ -44,4 +44,16 @@ class PostService
         $post->delete();
         return $post;
     }
+
+
+    public function getcomments($id)
+    {
+        $post = Post::with(['comments.replies'])->find($id);
+        $comments = $post->comments()->orderBy('created_at', 'desc')->paginate(5);
+
+
+        return $comments;
+
+    }
 }
+

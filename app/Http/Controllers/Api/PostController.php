@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Models\User;
 use App\Services\PostService;
 use Illuminate\Http\Request;
 
@@ -22,9 +23,18 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Post $request)
     {
-        //
+        $posts = $this->postService->getAllPosts();
+
+        return PostResource::collection($posts)->additional([
+            'meta' => [
+                'current_page' => $posts->currentPage(),
+                'per_page' => $posts->perPage(),
+                'total' => $posts->total(),
+                'total_pages' => $posts->lastPage(),
+            ]
+        ]);
     }
 
     /**
@@ -40,24 +50,26 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'title' => 'required|string|max:255',
+            'text' => 'required|string|max:255',
+        ];
+
+        $post = Post::create([
+            'title' => $request['title'],
+            'text' => $request['text'],
+            'user_id' => $request->user()->id,
+        ]);
+
+        return response()->json(['post stored! ']);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $request)
+    public function show(string $id)
     {
-        $posts = $this->postService->getAllPosts();
-
-        return PostResource::collection($posts)->additional([
-            'meta' => [
-                'current_page' => $posts->currentPage(),
-                'per_page' => $posts->perPage(),
-                'total' => $posts->total(),
-                'total_pages' => $posts->lastPage(),
-            ]
-        ]);
+        //   
     }
 
     /**
@@ -71,9 +83,20 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
-        //
+
+        $rules = [
+            'title' => 'required|string|max:255',
+            'text' => 'required|string|max:255',
+        ];
+
+        $post->update([
+            'title' => $request['title'],
+            'text' => $request['text'],
+        ]);
+
+        return response()->json(['post updated! ']);
     }
 
     /**
@@ -81,6 +104,14 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $delete = $this->postService->deletePost($id);
+
+        return response()->json(['post deleted ' . $delete]);
+    }
+
+    public function comments(string $id)
+    {
+
+        return $this->postService->getcomments($id);
     }
 }

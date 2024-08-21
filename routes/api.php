@@ -11,9 +11,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [RegisterController::class, 'login']);
 Route::post('/register', [RegisterController::class, 'store']);
+Route::get('/user/posts/{post}', [PostController::class, 'comments']);
+
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/user/posts', [UserController::class, 'show'])->name('user.post.show');
+    Route::get('/user/posts', [UserController::class, 'index'])->name('user.post.show');
 });
 
 Route::post('/protect', function (Request $request) {

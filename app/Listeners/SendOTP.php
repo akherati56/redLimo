@@ -22,6 +22,7 @@ class SendOTP
      */
     public function handle(UserRegistered $event): void
     {
+        dd('test');
         $otp = rand(100000, 999999);
 
         Redis::setex('otp:' . $event->user->phoneNumber, 600, $otp);

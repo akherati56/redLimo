@@ -35,7 +35,7 @@ class RegisterController extends Controller
             return response()->json(['incorrect otp']);
         }
 
-        $user = User::find(1);
+        $user = User::where('phoneNumber', $request['phoneNumber'])->firstOrFail();
         $token = $user->createToken('Personal Access Token')->accessToken;
 
         return response()->json(['token' => $token], 200);

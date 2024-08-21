@@ -32,11 +32,11 @@ class RegisterRequest extends FormRequest
         ];
     }
 
-    public function messages()
-    {
-        return [
-            'name.required' => 'The name field is mandatory.',
-            'phone_number.unique' => 'The phone number is already taken.',
-        ];
-    }
+    // public function messages()
+    // {
+    //     // return [
+    //     //     'name.required' => 'The name field is mandatory.',
+    //     //     'phone_number.unique' => 'The phone number is already taken.',
+    //     // ];
+    // }
 }

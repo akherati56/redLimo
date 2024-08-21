@@ -16,8 +16,9 @@ class PostResource extends JsonResource
     {
         return [
             'title' => $this->title,
-            'text' => $this->content,
+            'text' => $this->text,
             'comments' => CommentResource::collection($this->whenLoaded('comments')),
+            'user' => $this->whenLoaded('user'),
         ];
     }
 }

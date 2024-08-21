@@ -14,8 +14,6 @@ class RegisterController extends Controller
 {
     public function store(Request $request)
     {
-        // $request = $request->request();
-
         $user = User::create([
             'name' => $request['name'],
             'phoneNumber' => $request['phoneNumber'],
@@ -34,7 +32,6 @@ class RegisterController extends Controller
 
     public function login(Request $request)
     {
-        // return $request;
         $storedToken = Redis::get('otp:' . $request['phoneNumber']);
 
         if ($storedToken !== $request['otp'] || $storedToken == null) {

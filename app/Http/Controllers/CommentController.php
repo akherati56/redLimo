@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -11,20 +12,32 @@ class CommentController extends Controller
     {
         $validatedData = $request->validate([
             'post_id' => 'required|exists:posts,id',
-            'body' => 'required|string',
-            'parent_id' => 'nullable|exists:comments,id',
+            'parent_id' => 'nullable|exists:comments,id', // parent_id is optional and must exist in comments table
+            'text' => 'required|string|max:1000',
         ]);
 
-        $comment = auth()->user()->comments()->create($validatedData);
+        $comment = Comment::create([
+            'post_id' => $validatedData['post_id'],
+            'parent_id' => $validatedData['parent_id'] ?? null, // If parent_id is provided, it's a reply
+            'text' => $validatedData['text'],
+        ]);
 
-        return response()->json($comment, 201);
+        return response()->json([
+            'message' => 'Comment added successfully!',
+            'comment' => $comment
+        ], 201);
     }
 
     public function show($id)
     {
-        $comment = Comment::with('user', 'replies')->findOrFail($id);
+        $post = Post::with([
+            'comments' => function ($query) {
+                $query->whereNull('parent_id')
+                    ->with('replies');
+            }
+        ])->findOrFail($id);
 
-        return response()->json($comment);
+        return response()->json($post);
     }
 
 }

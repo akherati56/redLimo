@@ -15,17 +15,12 @@ class AuthServiceProvider extends ServiceProvider
         //
     }
 
-    protected $policies = [
-            // Register the Post model and its policy
-        Post::class => PostPolicy::class,
-    ];
 
     /**
      * Bootstrap services.
      */
     public function boot(): void
     {
-        // $this->registerPolicies();
-        // Passport::routes();
+        //
     }
 }

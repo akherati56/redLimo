@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'smsir' => [
+        'api_key' => env('SMSIR_API_KEY'),
+    ],
+
 ];

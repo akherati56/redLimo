@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Interface\SmsServiceInterface;
+use App\Services\SmsIrService;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -12,7 +14,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(SmsServiceInterface::class, SmsIrService::class);
+
     }
 
     /**

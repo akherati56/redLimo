@@ -21,8 +21,6 @@ class LoginTest extends TestCase
             'otp' => $otp,
         ]);
 
-        dd($response);
-
         // Assert that the login is successful and returns an API token
         $response->assertStatus(200)
             ->assertJsonStructure([

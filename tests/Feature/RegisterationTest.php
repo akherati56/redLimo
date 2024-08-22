@@ -1,5 +1,4 @@
 <?php
-// tests/Feature/RegisterUserTest.php
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

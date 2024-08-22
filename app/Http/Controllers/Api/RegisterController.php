@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Jobs\SendOTP;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Request;
 
 class RegisterController extends Controller
 {
@@ -23,5 +24,7 @@ class RegisterController extends Controller
         ]);
 
         SendOTP::dispatch($user);
+
+        return response()->json(['token sent! ', $status = 200]);
     }
 }

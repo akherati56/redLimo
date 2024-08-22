@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\PostController;
@@ -9,7 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', [RegisterController::class, 'login']);
+Route::post('/login', [LoginController::class, 'login']);
 Route::post('/register', [RegisterController::class, 'store']);
 Route::get('/user/posts/{post}', [PostController::class, 'comments']);
 

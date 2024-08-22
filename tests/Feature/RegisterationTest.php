@@ -5,7 +5,7 @@ use Tests\TestCase;
 
 class RegisterUserTest extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
 
     /** @test */
     public function it_can_register_a_new_user()

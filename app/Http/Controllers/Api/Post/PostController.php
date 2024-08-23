@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Post;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
@@ -50,27 +51,16 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $rules = [
-            'title' => 'required|string|max:255',
-            'text' => 'required|string|max:255',
-        ];
+        $validated = $request->validated();
 
         $post = Post::create([
-            'title' => $request['title'],
-            'text' => $request['text'],
-            'user_id' => $request->user()->id,
+            'title' => $validated['title'],
+            'text' => $validated['text'],
+            'user_id' => $validated->user()->id,
         ]);
 
         return response()->json(['post stored! ']);
@@ -82,14 +72,6 @@ class PostController extends Controller
     public function show(string $id)
     {
         //   
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
@@ -123,7 +105,6 @@ class PostController extends Controller
 
     public function comments(string $id)
     {
-
         return $this->postService->getcomments($id);
     }
 }

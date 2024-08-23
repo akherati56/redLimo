@@ -3,10 +3,29 @@
 namespace App\Services;
 
 use App\Http\Requests\StorePostRequest;
+use App\Interface\PostRepositoryInterface;
 use App\Models\Post;
 
 class PostService
 {
+
+    protected $postRepository;
+
+    public function __construct(PostRepositoryInterface $postRepository)
+    {
+        $this->postRepository = $postRepository;
+    }
+
+    public function listPosts(array $with = [])
+    {
+        return $this->postRepository->getAll($with);
+    }
+
+    public function getPost($id, array $with = [])
+    {
+        return $this->postRepository->getById($id, $with);
+    }
+
     public function getAllPosts()
     {
         $posts = Post::orderBy('created_at', 'desc')->with([
@@ -32,13 +51,15 @@ class PostService
         // Validate the incoming request data
         $validatedData = $request->validate();
 
-        return Post::create($validatedData);
+        return $this->postRepository->create($validatedData);
     }
 
-    public function updatePost($id, array $data)
+    public function updatePost($id, StorePostRequest $request)
     {
+        $validatedData = $request->validate();
+
         $post = Post::findOrFail($id);
-        $post->update($data);
+        $post->update($validatedData);
         return $post;
     }
 

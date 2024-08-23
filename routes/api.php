@@ -1,13 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\LoginController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\Api\RegisterController;
-use App\Http\Controllers\Api\PostController;
-use App\Http\Controllers\Api\ProfileController;
-use App\Http\Controllers\Api\UserController;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\Comment\CommentController;
+use App\Http\Controllers\Api\Post\PostController;
+use App\Http\Controllers\Api\Profile\ProfileController;
+use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [LoginController::class, 'login']);
@@ -18,10 +16,6 @@ Route::get('/user/posts/{post}', [PostController::class, 'comments']);
 Route::middleware('auth:api')->group(function () {
     Route::get('/user/posts', [UserController::class, 'index'])->name('user.post.show');
 });
-
-Route::post('/protect', function (Request $request) {
-    return response()->json(['api works']);
-})->middleware('auth:api');
 
 Route::middleware('auth:api')->group(function () {
     Route::resource('/profile', ProfileController::class);

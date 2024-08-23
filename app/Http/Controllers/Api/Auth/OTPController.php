@@ -21,7 +21,8 @@ class OTPController extends Controller
             return response()->json(['otp already has sent!']);
         }
 
-        SendOTP::dispatch($validate['phoneNumber'], "$otp");
+        SendOTP::dispatch($validate['phoneNumber'], $otp);
+        // SmsOtpJob::dispatch($validate['phoneNumber'], $otp);
 
         return response()->json(['otp has been sent!' . ' here is value of otp for test: ' . $otp]);
     }

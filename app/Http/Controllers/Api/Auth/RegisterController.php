@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Jobs\SendOTP;
+use App\Jobs\SmsOtpJob;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
@@ -26,7 +27,8 @@ class RegisterController extends Controller
             'password' => Hash::make($validate['password']),
         ]);
 
-        SendOTP::dispatch($validate['phoneNumber'], "$otp");
+        SendOTP::dispatch($validate['phoneNumber'], $otp);
+        // SmsOtpJob::dispatch($validate['phoneNumber'], $otp);
 
         return response()->json(['register was successfull! ', $status = 200]);
     }

@@ -1,22 +1,23 @@
 <?php
 use App\Models\User;
 
-test('delete post', function () {
+test('get posts of user', function () {
+
     $user = User::factory()->create();
 
     $token = $user->createToken('Personal Access Token')->accessToken;
 
-    $data = [
-        'title' => 'title',
-        'text' => 'text',
-    ];
-
     $response = $this->withHeaders([
         'Authorization' => "Bearer $token",
-    ])->postJson('/api/post', $data);
+    ])->get('/api/user/posts');
 
-
-    dd($response);
+    $response->assertStatus(200)
+        ->assertJsonStructure([
+            'data',
+        ]);
 });
+
+
+
 
 

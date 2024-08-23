@@ -1,22 +1,20 @@
 <?php
 use App\Models\User;
 
-test('delete post', function () {
+test('create comment', function () {
     $user = User::factory()->create();
 
     $token = $user->createToken('Personal Access Token')->accessToken;
 
     $data = [
-        'title' => 'title',
+        'parent_id' => '1',
         'text' => 'text',
+        'post_id' => '1'
     ];
 
     $response = $this->withHeaders([
         'Authorization' => "Bearer $token",
-    ])->postJson('/api/post', $data);
+    ])->postJson('/api/comments', $data);
 
-
-    dd($response);
+    $response->assertSee('parent_id');
 });
-
-

@@ -1,7 +1,7 @@
 <?php
 use App\Models\User;
 
-test('get all Posts', function () {
+test('create post', function () {
     $user = User::factory()->create();
 
     $token = $user->createToken('Personal Access Token')->accessToken;
@@ -15,8 +15,7 @@ test('get all Posts', function () {
         'Authorization' => "Bearer $token",
     ])->postJson('/api/post', $data);
 
-
-    dd($response);
+    $response->assertSee('post stored!');
 });
 
 

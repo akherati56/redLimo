@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Post;
 use App\Models\Post;
+use App\Services\PostService;
 use Auth;
 
 class PostDelete extends PostService
@@ -10,9 +11,11 @@ class PostDelete extends PostService
     {
         $post = Post::findOrFail($id);
 
-        dd(Auth::user()->can('delete', $post));
+        if (Auth::user()->can('delete', $post)) {
+            $post->delete();
+            return response()->json(['message' => 'Post deleted successfully.']);
 
-        $post->delete();
-        return $post;
+        }
+        return response()->json(['message' => 'You are not authorized to delete this post.'], 403);
     }
 }

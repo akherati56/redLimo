@@ -7,41 +7,38 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostReqeust;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
-use App\Models\User;
 use App\Services\Post\PostGetAllPostsWithUserAndComments;
-use App\Services\PostCreate;
-use App\Services\PostDelete;
-use App\Services\PostGetById;
-use App\Services\PostService;
-use App\Services\PostUpdate;
-use Illuminate\Http\Request;
+use App\Services\Post\PostCreate;
+use App\Services\Post\PostDelete;
+use App\Services\Post\PostGetById;
+use App\Services\Post\PostGetCommnetsWithReplies;
+use App\Services\Post\PostUpdate;
 
 class PostController extends Controller
 {
-
     protected $postService;
     protected $postCreate;
     protected $postUpdate;
     protected $postDelete;
     protected $postGetAllPostsWithUserAndComments;
     protected $postGetById;
+    protected $postGetCommnetsWithReplies;
 
 
     public function __construct(
-        PostService $postService,
         PostCreate $postCreate,
         PostUpdate $postUpdate,
         PostDelete $postDelete,
         PostGetAllPostsWithUserAndComments $postGetAllPostsWithUserAndComments,
-        PostGetById $postGetById
+        PostGetById $postGetById,
+        PostGetCommnetsWithReplies $postGetCommnetsWithReplies,
     ) {
-        $this->postService = $postService;
         $this->postCreate = $postCreate;
         $this->postUpdate = $postUpdate;
         $this->postDelete = $postDelete;
         $this->postGetAllPostsWithUserAndComments = $postGetAllPostsWithUserAndComments;
         $this->postGetById = $postGetById;
-
+        $this->postGetCommnetsWithReplies = $postGetCommnetsWithReplies;
     }
 
     /**
@@ -63,25 +60,11 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //   
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostReqeust $request, Post $post)
+    public function update(StorePostRequest $request, Post $post)
     {
-        $validate = $request->validated();
-
-        $post->update([
-            'title' => $validate['title'],
-            'text' => $validate['text'],
-        ]);
-
+        $this->postUpdate->updatePost($request, $post);
         return response()->json(['post updated! ']);
     }
 
@@ -90,13 +73,12 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        $delete = $this->postService->deletePost($id);
-
+        $delete = $this->postDelete->deletePost($id);
         return response()->json(['post deleted ' . $delete]);
     }
 
     public function comments(string $id)
     {
-        return $this->postService->getcomments($id);
+        return $this->postGetCommnetsWithReplies->getcomments($id);
     }
 }

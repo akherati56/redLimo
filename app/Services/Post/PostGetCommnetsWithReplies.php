@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Post;
 use App\Models\Post;
+use App\Services\PostService;
 
 class PostGetCommnetsWithReplies extends PostService
 {

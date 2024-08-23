@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use App\Services\PostService;
 
 class PostUpdate extends PostService
 {
-    public function updatePost($id, StorePostRequest $request)
+    public function updatePost(StorePostRequest $request, Post $post)
     {
-        $validatedData = $request->validate();
+        $validate = $request->validated();
 
-        $post = Post::findOrFail($id);
-        $post->update($validatedData);
+        $post->update([
+            'title' => $validate['title'],
+            'text' => $validate['text'],
+        ]);
         return $post;
     }
 }

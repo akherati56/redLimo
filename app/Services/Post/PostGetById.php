@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Post;
+use App\Services\PostService;
 
 class PostGetById extends PostService
 {

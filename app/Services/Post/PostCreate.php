@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use App\Services\PostService;
 
 class PostCreate extends PostService
 {
@@ -16,8 +17,8 @@ class PostCreate extends PostService
             'title' => $validated['title'],
             'text' => $validated['text'],
             'user_id' => $id,
-        ]); 
+        ]);
 
-        return $post
+        return $post;
     }
 }

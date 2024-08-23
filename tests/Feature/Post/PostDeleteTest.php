@@ -1,8 +1,15 @@
 <?php
+use App\Models\Post;
 use App\Models\User;
 
 test('delete post', function () {
     $user = User::factory()->create();
+
+    $post = Post::factory()->create([
+        'user_id' => $user->id,
+        'title' => 'title',
+        'text' => 'text',
+    ]);
 
     $token = $user->createToken('Personal Access Token')->accessToken;
 
@@ -13,10 +20,10 @@ test('delete post', function () {
 
     $response = $this->withHeaders([
         'Authorization' => "Bearer $token",
-    ])->postJson('/api/post', $data);
+    ])->deleteJson('/api/post/' . $post->id, $data);
 
+    $response->assertSee('Post deleted');
 
-    dd($response);
 });
 
 

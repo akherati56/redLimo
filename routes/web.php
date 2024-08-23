@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\PostController;
 use App\Http\Controllers\Web\UserController;
 use App\Models\User;

@@ -8,18 +8,40 @@ use App\Http\Requests\UpdatePostReqeust;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
+use App\Services\Post\PostGetAllPostsWithUserAndComments;
+use App\Services\PostCreate;
+use App\Services\PostDelete;
+use App\Services\PostGetById;
 use App\Services\PostService;
+use App\Services\PostUpdate;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
 
     protected $postService;
+    protected $postCreate;
+    protected $postUpdate;
+    protected $postDelete;
+    protected $postGetAllPostsWithUserAndComments;
+    protected $postGetById;
 
 
-    public function __construct(PostService $postService)
-    {
+    public function __construct(
+        PostService $postService,
+        PostCreate $postCreate,
+        PostUpdate $postUpdate,
+        PostDelete $postDelete,
+        PostGetAllPostsWithUserAndComments $postGetAllPostsWithUserAndComments,
+        PostGetById $postGetById
+    ) {
         $this->postService = $postService;
+        $this->postCreate = $postCreate;
+        $this->postUpdate = $postUpdate;
+        $this->postDelete = $postDelete;
+        $this->postGetAllPostsWithUserAndComments = $postGetAllPostsWithUserAndComments;
+        $this->postGetById = $postGetById;
+
     }
 
     /**
@@ -27,28 +49,8 @@ class PostController extends Controller
      */
     public function index(Post $request)
     {
-        $posts = $this->postService->getAllPosts();
-
-        // return PostResource::collection($posts)->additional([
-        //     'meta' => [
-        //         'current_page' => $posts->currentPage(),
-        //         'per_page' => $posts->perPage(),
-        //         'total' => $posts->total(),
-        //         'total_pages' => $posts->lastPage(),
-        //     ]
-        // ]);
-
-
-        // $posts = Post::orderBy('created_at', 'desc')->with([
-        //     'user', // Eager load the user who created the post
-        //     'comments' => function ($query) {
-        //         $query->take(2) // Limit the comments to 2 per post
-        //             ->with('user'); // Eager load the user who made the comment
-        //     }
-        // ])->paginate(10);
-
+        $posts = $this->postGetAllPostsWithUserAndComments->getAllPosts();
         return PostResource::collection($posts);
-
     }
 
     /**
@@ -56,15 +58,7 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        $id = $request->user()->id;
-        $validated = $request->validated();
-
-        $post = Post::create([
-            'title' => $validated['title'],
-            'text' => $validated['text'],
-            'user_id' => $id,
-        ]);
-
+        $this->postCreate->createPost($request);
         return response()->json(['post stored! ']);
     }
 

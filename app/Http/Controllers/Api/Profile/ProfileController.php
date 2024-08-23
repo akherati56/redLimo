@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Profile;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Resources\Profile\GetProfileResource;
 use Auth;
 use Illuminate\Http\Request;
@@ -19,14 +20,19 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        $user = Auth::user();
+        $validate = $request->validated();
 
-        $request->user()->save();
+        $user->update([
+            'name' => $validate['name'],
+            'bio' => $validate['bio'],
+            'email' => $validate['email'],
+        ]);
+
+
+        return new GetProfileResource($user);
     }
 }

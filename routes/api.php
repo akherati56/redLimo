@@ -20,7 +20,8 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
-    Route::resource('/profile', ProfileController::class);
+    Route::get('/profile', [ProfileController::class, 'index']);
+    Route::patch('/profile/update', [ProfileController::class, 'update']);
 });
 
 Route::middleware('auth:api')->group(function () {

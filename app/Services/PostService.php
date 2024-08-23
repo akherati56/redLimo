@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Http\Requests\StorePostRequest;
 use App\Interface\PostRepositoryInterface;
 use App\Models\Post;
+use Auth;
 
 class PostService
 {
@@ -66,6 +67,9 @@ class PostService
     public function deletePost($id)
     {
         $post = Post::findOrFail($id);
+
+        dd(Auth::user()->can('delete', $post));
+
         $post->delete();
         return $post;
     }

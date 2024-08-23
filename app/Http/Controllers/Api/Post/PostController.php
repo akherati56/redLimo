@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostReqeust;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
@@ -55,12 +56,13 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
+        $id = $request->user()->id;
         $validated = $request->validated();
 
         $post = Post::create([
             'title' => $validated['title'],
             'text' => $validated['text'],
-            'user_id' => $validated->user()->id,
+            'user_id' => $id,
         ]);
 
         return response()->json(['post stored! ']);
@@ -77,17 +79,13 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostReqeust $request, Post $post)
     {
-
-        $rules = [
-            'title' => 'required|string|max:255',
-            'text' => 'required|string|max:255',
-        ];
+        $validate = $request->validated();
 
         $post->update([
-            'title' => $request['title'],
-            'text' => $request['text'],
+            'title' => $validate['title'],
+            'text' => $validate['text'],
         ]);
 
         return response()->json(['post updated! ']);

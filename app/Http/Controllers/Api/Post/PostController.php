@@ -22,7 +22,6 @@ class PostController extends Controller
     protected $postDelete;
     protected $postGetAllPostsWithUserAndComments;
     protected $postGetById;
-    protected $postGetCommnetsWithReplies;
 
 
     public function __construct(
@@ -31,14 +30,12 @@ class PostController extends Controller
         PostDelete $postDelete,
         PostGetAllPostsWithUserAndComments $postGetAllPostsWithUserAndComments,
         PostGetById $postGetById,
-        PostGetCommnetsWithReplies $postGetCommnetsWithReplies,
     ) {
         $this->postCreate = $postCreate;
         $this->postUpdate = $postUpdate;
         $this->postDelete = $postDelete;
         $this->postGetAllPostsWithUserAndComments = $postGetAllPostsWithUserAndComments;
         $this->postGetById = $postGetById;
-        $this->postGetCommnetsWithReplies = $postGetCommnetsWithReplies;
     }
 
     /**
@@ -77,8 +74,4 @@ class PostController extends Controller
         return response()->json(['post deleted ' . $delete]);
     }
 
-    public function comments(string $id)
-    {
-        return $this->postGetCommnetsWithReplies->getcomments($id);
-    }
 }

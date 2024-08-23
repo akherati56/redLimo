@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Http\Resources\Profile\GetProfileResource;
 use Auth;
 use Illuminate\Http\Request;
@@ -20,7 +20,7 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProfileUpdateRequest $request)
+    public function update(UpdateProfileRequest $request)
     {
 
         $user = Auth::user();

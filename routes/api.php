@@ -29,6 +29,7 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::middleware('auth:api')->group(function () {
-    Route::resource('/comment', CommentController::class);
+    Route::get('/comments/{comment}', [CommentController::class, 'index']);
+    Route::post('/comments', [CommentController::class, 'store']);
 });
 

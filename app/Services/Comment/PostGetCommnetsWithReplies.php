@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Services\Post;
+namespace App\Services\Comment;
 use App\Models\Post;
-use App\Services\PostService;
 
-class PostGetCommnetsWithReplies extends PostService
+class PostGetCommnetsWithReplies
 {
     public function getcomments($id)
     {
@@ -27,5 +26,4 @@ class PostGetCommnetsWithReplies extends PostService
         ]);
 
     }
-
 }

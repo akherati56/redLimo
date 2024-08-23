@@ -13,9 +13,15 @@ class LoginController extends Controller
     {
         $storedToken = Redis::get('otp:' . $request['phoneNumber']);
 
+        if (!$storedToken) {
+            return response()->json(['OTP hasnt instanciated yet!']);
+        }
+
         if ($storedToken !== $request['otp'] || $storedToken == null) {
             return response()->json(['incorrect otp']);
         }
+
+        Redis::del('otp:' . $request['phoneNumber']);
 
         $user = User::where('phoneNumber', $request['phoneNumber'])->firstOrFail();
         $token = $user->createToken('Personal Access Token')->accessToken;

@@ -11,15 +11,16 @@ class SendOTP implements ShouldQueue
 {
     use Queueable;
 
-
-    protected $user;
+    protected $phoneNumber;
+    protected $otp;
     /**
      * Create a new job instance.
      */
-    public function __construct(User $user)
+    public function __construct(string $phoneNumber, string $otp)
     {
-        $this->user = $user;
-
+        $this->phoneNumber = $phoneNumber;
+        $this->otp = $otp;
+        Redis::setex('otp:' . $this->phoneNumber, 30, $this->otp);
     }
 
     /**
@@ -27,8 +28,6 @@ class SendOTP implements ShouldQueue
      */
     public function handle(): void
     {
-        $otp = rand(100000, 999999);
-
-        Redis::setex('otp:' . $this->user->phoneNumber, 600, $otp);
+        //
     }
 }

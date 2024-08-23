@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
-use App\Jobs\SendOTP;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Request;
+use Illuminate\Support\Facades\Redis;
 
 class RegisterController extends Controller
 {
@@ -23,8 +22,6 @@ class RegisterController extends Controller
             'password' => Hash::make($validate['password']),
         ]);
 
-        SendOTP::dispatch($user);
-
-        return response()->json(['token sent! ', $status = 200]);
+        return response()->json(['register was successfull! ', $status = 200]);
     }
 }

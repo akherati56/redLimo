@@ -15,30 +15,6 @@ class PostSeeder extends Seeder
      */
     public function run(): void
     {
-
-        // $user = User::factory()->create();
-
-        // $post = Post::create([
-        //     'title' => 'title of post',
-        //     'text' => 'some text',
-        //     'user_id' => $user->id,
-        // ]);
-
-        // Comment::create([
-        //     'user_id' => $user->id,
-        //     'post_id' => $post->id,
-        // ]);
-        // Comment::create([
-        //     'user_id' => $user->id,
-        //     'post_id' => $post->id,
-        // ]);
-        // Comment::create([
-        //     'user_id' => $user->id,
-        //     'post_id' => $post->id,
-        // ]);
-
-
-
         User::factory()
             ->hasPosts(10, function (array $attributes, User $user) {
                 return ['user_id' => $user->id];

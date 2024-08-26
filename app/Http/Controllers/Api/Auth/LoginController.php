@@ -22,13 +22,20 @@ class LoginController extends Controller
             return response()->json(['incorrect otp']);
         }
 
-        Cache::forget('otp:' . $request['phoneNumber']);
         $user = Cache::get('user:' . $request['phoneNumber']);
-        $user->save();
+        if ($user) {
+            $user->save();
+        }
 
-        $user = User::where('phoneNumber', $request['phoneNumber'])->firstOrFail();
+        Cache::forget('otp:' . $request['phoneNumber']);
+        Cache::forget('user:' . $request['phoneNumber']);
+
+        $user = User::where('phoneNumber', $request['phoneNumber'])->first();
+        if (!$user) {
+            return response()->json(['msg' => 'user creation faild!'], 200);
+        }
+
         $token = $user->createToken('Personal Access Token')->accessToken;
-
         return response()->json(['token' => $token], 200);
     }
 }

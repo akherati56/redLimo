@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OTPRequest;
-use App\Jobs\SendOTP;
+use App\Jobs\SendOTPJob;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
 
 class OTPController extends Controller
 {
@@ -28,7 +27,7 @@ class OTPController extends Controller
             return response()->json(['otp already has sent!']);
         }
 
-        SendOTP::dispatch($validate['phoneNumber'], $otp);
+        SendOTPJob::dispatch($validate['phoneNumber'], $otp)->onQueue('sendOtp');
         // SmsOtpJob::dispatch($validate['phoneNumber'], $otp);
 
         return response()->json(['msg' => 'otp has been sent!', 'otp' => $otp]);

@@ -2,13 +2,11 @@
 
 namespace App\Jobs;
 
-use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
 
-class SendOTP implements ShouldQueue
+class SendOTPJob implements ShouldQueue
 {
     use Queueable;
 
@@ -21,7 +19,6 @@ class SendOTP implements ShouldQueue
     {
         $this->phoneNumber = $phoneNumber;
         $this->otp = $otp;
-        Cache::add('otp:' . $this->phoneNumber, $this->otp, 30);
     }
 
     /**
@@ -29,6 +26,6 @@ class SendOTP implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        Cache::add('otp:' . $this->phoneNumber, $this->otp, 30);
     }
 }

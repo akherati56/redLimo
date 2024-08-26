@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
-use App\Jobs\SendOTP;
+use App\Jobs\SendOTPJob;
 use App\Jobs\SmsOtpJob;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redis;
 
 class RegisterController extends Controller
 {
@@ -34,7 +33,7 @@ class RegisterController extends Controller
 
         Cache::add('user:' . $validate['phoneNumber'], $user, now()->addMinutes(4));
 
-        SendOTP::dispatch($validate['phoneNumber'], $otp);
+        SendOTPJob::dispatch($validate['phoneNumber'], $otp)->onQueue('sendOtp');
         // SmsOtpJob::dispatch($validate['phoneNumber'], $otp);
 
         return response()->json(['register was successfull! ', $status = 200]);

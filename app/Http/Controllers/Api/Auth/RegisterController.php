@@ -20,7 +20,7 @@ class RegisterController extends Controller
         $validate = $request->validated();
         $otp = rand(999, 9999);
 
-        if ('user:' . $validate['phoneNumber']) {
+        if (Cache::get('user:' . $validate['phoneNumber'])) {
             return response()->json(['already registerd!', $status = 200]);
         }
 

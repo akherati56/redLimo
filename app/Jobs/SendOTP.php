@@ -21,7 +21,7 @@ class SendOTP implements ShouldQueue
     {
         $this->phoneNumber = $phoneNumber;
         $this->otp = $otp;
-        // Redis::setex('otp:' . $this->phoneNumber, 30, $this->otp);
+        Cache::add('otp:' . $this->phoneNumber, $this->otp, 30);
     }
 
     /**
@@ -29,6 +29,6 @@ class SendOTP implements ShouldQueue
      */
     public function handle(): void
     {
-        Cache::add('otp:' . $this->phoneNumber, $this->otp, 30);
+        //
     }
 }

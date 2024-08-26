@@ -12,9 +12,7 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        // $storedToken = Redis::get('otp:' . $request['phoneNumber']);
         $storedToken = Cache::get('otp:' . $request['phoneNumber']);
-
 
         if (!$storedToken) {
             return response()->json(['OTP hasnt instanciated yet!']);
@@ -24,7 +22,6 @@ class LoginController extends Controller
             return response()->json(['incorrect otp']);
         }
 
-        // Redis::del('otp:' . $request['phoneNumber']);
         Cache::forget('otp:' . $request['phoneNumber']);
         $user = Cache::get('user:' . $request['phoneNumber']);
         $user->save();

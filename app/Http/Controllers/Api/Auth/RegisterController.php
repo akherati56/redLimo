@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Jobs\SendOTP;
 use App\Jobs\SmsOtpJob;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
 
@@ -17,15 +18,21 @@ class RegisterController extends Controller
         $validate = $request->validated();
 
         $validate = $request->validated();
-        $otp = rand(100000, 999999);
+        $otp = rand(999, 9999);
 
-        $user = User::create([
+        if ('user:' . $validate['phoneNumber']) {
+            return response()->json(['already registerd!', $status = 200]);
+        }
+
+        $user = new User([
             'name' => $validate['name'],
             'phoneNumber' => $validate['phoneNumber'],
             'bio' => $validate['bio'],
             'email' => $validate['email'],
             'password' => Hash::make($validate['password']),
         ]);
+
+        Cache::add('user:' . $validate['phoneNumber'], $user, now()->addMinutes(4));
 
         SendOTP::dispatch($validate['phoneNumber'], $otp);
         // SmsOtpJob::dispatch($validate['phoneNumber'], $otp);

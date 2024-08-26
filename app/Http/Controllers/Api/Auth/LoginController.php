@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
 class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $storedToken = Redis::get('otp:' . $request['phoneNumber']);
+        // $storedToken = Redis::get('otp:' . $request['phoneNumber']);
+        $storedToken = Cache::get('otp:' . $request['phoneNumber']);
+
 
         if (!$storedToken) {
             return response()->json(['OTP hasnt instanciated yet!']);
@@ -21,7 +24,10 @@ class LoginController extends Controller
             return response()->json(['incorrect otp']);
         }
 
-        Redis::del('otp:' . $request['phoneNumber']);
+        // Redis::del('otp:' . $request['phoneNumber']);
+        Cache::forget('otp:' . $request['phoneNumber']);
+        $user = Cache::get('user:' . $request['phoneNumber']);
+        $user->save();
 
         $user = User::where('phoneNumber', $request['phoneNumber'])->firstOrFail();
         $token = $user->createToken('Personal Access Token')->accessToken;

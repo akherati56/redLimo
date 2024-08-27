@@ -7,6 +7,7 @@ use App\Http\Requests\OTPRequest;
 use App\Jobs\SendOTPJob;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class OTPController extends Controller
 {
@@ -14,6 +15,8 @@ class OTPController extends Controller
     {
         $validate = $request->validated();
         $otp = rand(999, 9999);
+
+        Log::channel('getOtp')->info('user attetmp to get otp code: ' . $validate['phoneNumber']);
 
         $user = User::where('phoneNumber', $validate['phoneNumber'])->first();
         $user_cache = Cache::get('user:' . $validate['phoneNumber']);

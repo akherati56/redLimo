@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Comment\CommentController;
 use App\Http\Controllers\Api\Post\PostController;
 use App\Http\Controllers\Api\Profile\ProfileController;
 use App\Http\Controllers\Api\User\UserController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/getotp', [OTPController::class, 'getOTP']);
